@@ -26,4 +26,6 @@ const translateHandler = async () => {
   translatedArea.innerHTML = parsed.translation;
 };
 
-document.getElementById('translate-btn').addEventListener('click', translateHandler);
+document
+  .getElementById('translate-btn')
+  .addEventListener('click', translateHandler);
