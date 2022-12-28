@@ -45,7 +45,7 @@ class Translator {
     translationString = inputString;
     // translate words
     Object.keys(wordTranslation).forEach((word) => {
-      wordRegex = new RegExp(word, 'gi');
+      wordRegex = new RegExp(`${word}(?=\\W)`, 'gi');
       translationString = translationString.replace(
         wordRegex,
         this.highlight(wordTranslation[word])
@@ -53,7 +53,7 @@ class Translator {
     });
     // translate spelling
     Object.keys(spellingTranslation).forEach((word) => {
-      wordRegex = new RegExp(word, 'gi');
+      wordRegex = new RegExp(`${word}(?=\\W)`, 'gi');
       translationString = translationString.replace(
         wordRegex,
         this.highlight(spellingTranslation[word])
@@ -61,7 +61,7 @@ class Translator {
     });
     // translate titles
     Object.keys(titleTranslation).forEach((word) => {
-      wordRegex = new RegExp(word, 'gi');
+      wordRegex = new RegExp(`${word}(?=\\W)`, 'gi');
       translationString = translationString.replace(
         wordRegex,
         this.highlight(
@@ -87,7 +87,7 @@ class Translator {
 }
 
 // // TESTING AREA
-// const translator = new Translator();
+const translator = new Translator();
 // const aToB = 'American To British';
 // const bToA = 'British To American';
 // const testAToB = [
@@ -114,5 +114,10 @@ class Translator {
 //   console.log(`original: ${string}`);
 //   console.log(`translated: ${translator.translate(string, bToA)}`);
 // });
-
+console.log(
+  translator.translate(
+    'Can you toss this in the trashcan for me?',
+    'american-to-british'
+  ).translation
+);
 module.exports = Translator;
