@@ -45,7 +45,10 @@ class Translator {
     translationString = inputString;
     // translate words
     Object.keys(wordTranslation).forEach((word) => {
-      wordRegex = new RegExp(`${word}(?=\\W)`, 'gi');
+      // THIS MAY NEED SOME WORK IN FUTURE TESTING
+      // wordRegex = new RegExp(`${word}(?=\\W)`, 'gi');
+      // wordRegex = new RegExp(`(?<=(\\s*))${word}(?=\\W)`, 'gi');
+      wordRegex = new RegExp(`(?<!-)${word}(?=\\W)`, 'gi');
       translationString = translationString.replace(
         wordRegex,
         this.highlight(wordTranslation[word])
