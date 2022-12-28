@@ -46,10 +46,6 @@ const bToA = {
     'Have you met Mrs Kalyani?',
     "Prof Joyner of King's College, London.",
     'Tea time is usually around 4 or 4.30.',
-    // 'Mangoes are my favorite fruit.',
-    // 'I ate yogurt for breakfast.',
-    // 'We watched the footie match for a while.',
-    // 'Paracetamol takes up to an hour to work.',
   ],
   result: [
     'We watched the <span class="highlight">soccer</span> match for a while.',
@@ -62,10 +58,26 @@ const bToA = {
     'Have you met <span class="highlight">Mrs.</span> Kalyani?',
     `<span class="highlight">Prof.</span> Joyner of King's College, London.`,
     'Tea time is usually around 4 or <span class="highlight">4:30</span>.',
-    // 'Mangoes are my favorite fruit.',
-    // 'I ate yogurt for breakfast.',
-    // 'We watched the footie match for a while.',
-    // 'Paracetamol takes up to an hour to work.',
+  ],
+};
+const verifyHighlight = {
+  input: [
+    'Mangoes are my <span class="highlight">favourite</span> fruit.',
+    'I ate <span class="highlight">yoghurt</span> for breakfast.',
+    'We watched the footie match for a while.',
+    'Paracetamol takes up to an hour to work.',
+  ],
+  locale: [
+    'american-to-british',
+    'american-to-british',
+    'british-to-american',
+    'british-to-american',
+  ],
+  result: [
+    'Mangoes are my <span class="highlight">favourite</span> fruit.',
+    'I ate <span class="highlight">yoghurt</span> for breakfast.',
+    'We watched the <span class="highlight">soccer</span> match for a while.',
+    '<span class="highlight">Tylenol</span> takes up to an hour to work.',
   ],
 };
 suite('Unit Tests', () => {
@@ -86,6 +98,18 @@ suite('Unit Tests', () => {
         assert.equal(
           translator.translate(testString, locales[1]).translation,
           bToA.result[i]
+        );
+        done();
+      });
+    });
+  });
+  suite('Highlight Verification', () => {
+    verifyHighlight.input.forEach((testString, i) => {
+      test(`Highlight test #${i + 1}`, (done) => {
+        assert.equal(
+          translator.translate(testString, verifyHighlight.locale[i])
+            .translation,
+          verifyHighlight.result[i]
         );
         done();
       });
