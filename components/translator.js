@@ -1,5 +1,3 @@
-// NEW PLAN: iterate through the keys and test each one for a match in the string. Then replace with the value.
-
 const americanOnly = require('./american-only');
 const americanToBritishSpelling = require('./american-to-british-spelling');
 const americanToBritishTitles = require('./american-to-british-titles');
@@ -29,14 +27,14 @@ class Translator {
     let spellingTranslation;
     let titleTranslation;
     let clockSeparator;
-    let translation;
+    let translationString;
     // condense the if-else into four lines using ternarys?
-    if (locale === 'American To British') {
+    if (locale === 'american-to-british') {
       wordTranslation = americanOnly;
       spellingTranslation = americanToBritishSpelling;
       titleTranslation = americanToBritishTitles;
       clockSeparator = { regex: /(\d{1,2}):(\d{1,2})/g, replace: '.' };
-    } else {
+    } else if (locale === 'british-to-american') {
       wordTranslation = britishOnly;
       spellingTranslation = this.swapKeyValuePairs(americanToBritishSpelling);
       titleTranslation = this.swapKeyValuePairs(americanToBritishTitles);
@@ -44,11 +42,11 @@ class Translator {
     }
 
     // intitial translation
-    translation = inputString;
+    translationString = inputString;
     // translate words
     Object.keys(wordTranslation).forEach((word) => {
       wordRegex = new RegExp(word, 'gi');
-      translation = translation.replace(
+      translationString = translationString.replace(
         wordRegex,
         this.highlight(wordTranslation[word])
       );
@@ -56,7 +54,7 @@ class Translator {
     // translate spelling
     Object.keys(spellingTranslation).forEach((word) => {
       wordRegex = new RegExp(word, 'gi');
-      translation = translation.replace(
+      translationString = translationString.replace(
         wordRegex,
         this.highlight(spellingTranslation[word])
       );
@@ -64,7 +62,7 @@ class Translator {
     // translate titles
     Object.keys(titleTranslation).forEach((word) => {
       wordRegex = new RegExp(word, 'gi');
-      translation = translation.replace(
+      translationString = translationString.replace(
         wordRegex,
         this.highlight(
           titleTranslation[word].charAt(0).toUpperCase() +
@@ -73,43 +71,48 @@ class Translator {
       );
     });
     // translate times
-    translation = translation.replace(
+    translationString = translationString.replace(
       clockSeparator.regex,
       this.highlight(`$1${clockSeparator.replace}$2`)
     );
 
     // ensure first letter is uppercase.
     // FUTURE: every sentance should begin with uppercase
-    return translation.charAt(0).toUpperCase() + translation.slice(1);
+    // NOW: return should have 'text', 'translation'
+    // NOW: also add 'wasChanged' to be triggered if there was a highlight method call
+    translationString =
+      translationString.charAt(0).toUpperCase() + translationString.slice(1);
+    return { text: inputString, translation: translationString };
   }
 }
 
-// TESTING AREA
-const translator = new Translator();
-const aToB = 'American To British';
-const bToA = 'British To American';
-const testAToB = [
-  'Dr. Tylenol',
-  'Mangoes are my favorite fruit.',
-  'I ate yogurt for breakfast.',
-  'To play hooky means to skip class or work.',
-  'Lunch is at 12:15 today.',
-];
-const testBToA = [
-  'We watched the footie match for a while.',
-  'Paracetamol takes up to an hour to work.',
-  "I've just got bits and bobs in my bum bag.",
-  'Dinner is at 6.15 tonight.',
-];
-console.log(`----------------${aToB}----------------`);
-testAToB.forEach((string) => {
-  console.log(`original: ${string}`);
-  console.log(`translated: ${translator.translate(string, aToB)}`);
-});
-console.log(`----------------${bToA}----------------`);
-testBToA.forEach((string) => {
-  console.log(`original: ${string}`);
-  console.log(`translated: ${translator.translate(string, bToA)}`);
-});
+// // TESTING AREA
+// const translator = new Translator();
+// const aToB = 'American To British';
+// const bToA = 'British To American';
+// const testAToB = [
+//   'Dr. Tylenol',
+//   'Mangoes are my favorite fruit.',
+//   'I ate yogurt for breakfast.',
+//   'To play hooky means to skip class or work.',
+//   'Lunch is at 12:15 today.',
+//   'Hey there!',
+// ];
+// const testBToA = [
+//   'We watched the footie match for a while.',
+//   'Paracetamol takes up to an hour to work.',
+//   "I've just got bits and bobs in my bum bag.",
+//   'Dinner is at 6.15 tonight.',
+// ];
+// console.log(`----------------${aToB}----------------`);
+// testAToB.forEach((string) => {
+//   console.log(`original: ${string}`);
+//   console.log(`translated: ${translator.translate(string, aToB).translation}`);
+// });
+// console.log(`----------------${bToA}----------------`);
+// testBToA.forEach((string) => {
+//   console.log(`original: ${string}`);
+//   console.log(`translated: ${translator.translate(string, bToA)}`);
+// });
 
 module.exports = Translator;
